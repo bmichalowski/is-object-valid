@@ -1,0 +1,29 @@
+{
+  "name": "is-object-valid",
+  "version": "1.0.0",
+  "description": "JS object validator",
+  "main": "public/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmichalowski/is-object-valid.git"
+  },
+  "keywords": [
+    "js",
+    "object",
+    "validator",
+    "validation"
+  ],
+  "author": "bmichalowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bmichalowski/is-object-valid/issues"
+  },
+  "homepage": "https://github.com/bmichalowski/is-object-valid#readme",
+  "devDependencies": {
+    "jasmine": "^3.1.0"
+  }
+}
