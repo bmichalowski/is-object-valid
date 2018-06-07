@@ -1,6 +1,5 @@
-exports.schema = (base, acceptUndeclaredValues) => {
-    this.base = base;
-    this.acceptUndeclaredValues = acceptUndeclaredValues;
+export const schema = (pattern, acceptUndeclaredValues = false) => {
+    const base = Object.assign(pattern);
 
     return {
         isValid: (target) => {
@@ -10,4 +9,3 @@ exports.schema = (base, acceptUndeclaredValues) => {
         }
     }
 }
-

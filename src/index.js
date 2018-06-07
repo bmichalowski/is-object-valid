@@ -1,13 +1,14 @@
-let schema = require('./schema/schema.js').schema;
-
+import { schema } from './schema/schema.js';
 const key = (rules, values) => ({
     rules,
     values,
 })
 
 const types = {
-    array: 'array',
-    bool: 'bool',
+    array: (key) => {
+        const result = Array.isArray(key);
+    },
+    bool: (key) => typeof key === 'bool',
     number: 'number',
     string: 'string',
     object: 'object',
@@ -25,7 +26,7 @@ const rules = {
 
 const base = {
     a: key(types.string),
-    b: v(types.object, {c: v(types.number)})
+    b: key(types.object, {c: key(types.number)})
 };
 
 schema(base).isValid({a: 2, b: 'c', c: null, d: [], e: true});
