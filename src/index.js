@@ -5,17 +5,30 @@ const key = (rules, values) => ({
 })
 
 const types = {
-    array: (key) => {
-        const result = Array.isArray(key);
-    },
-    bool: (key) => typeof key === 'bool',
+    array: 'array',
+    bool: 'bool',
     number: 'number',
     string: 'string',
     object: 'object',
+    function: 'function',
 };
 
 const rules = {
-    type: 'type',
+    type: (expected) => {
+        return (value) => {
+            let result;
+            switch(expected) {
+                case array:
+                    result = Array.isArray(value);
+                default:
+                    result = typeof value === expected;
+            }
+            return {
+                result,
+                message: result ? '' : `Expected '${expected}' but got '${value}'.`
+            };
+        }
+    },
     minLength: 'minLength',
     maxLength: 'maxLength',
     minValue: 'minValue',
