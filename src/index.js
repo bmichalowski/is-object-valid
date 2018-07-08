@@ -14,27 +14,78 @@ const types = {
 };
 
 const rules = {
-    type: (expected) => {
-        return (value) => {
-            let result;
-            switch(expected) {
-                case array:
-                    result = Array.isArray(value);
-                default:
-                    result = typeof value === expected;
-            }
+    type: (expected) => (value) => {
+        let result;
+        switch(expected) {
+            case array:
+                result = Array.isArray(value);
+            default:
+                result = typeof value === expected;
+        }
+        return {
+            result,
+            message: result ? null : `Expected '${expected}' but got '${value}'.`,
+        };
+    },
+    minLength: (expected) => (value) => {
+        if (value.hasOwnProperty('length')) {
             return {
-                result,
-                message: result ? '' : `Expected '${expected}' but got '${value}'.`
-            };
+                result: value.length >= expected,
+                message: `Expected length to be equal at least ${expected} but got '${value.length}'.`
+            }
+        } else {
+            return { 
+                result: false,
+                message: `No length property available at '${value}'`,
+            }
+        }
+
+    },
+    maxLength: (expected) => (value) => {
+        if (value.hasOwnProperty('length')) {
+            return {
+                result: value.length <= expected,
+                message: `Expected length to be equal at least ${expected} but got '${value.length}'.`,
+            }
+        } else {
+            return { 
+                result: false,
+                message: `No length property available at '${value}'`,
+            }
         }
     },
-    minLength: 'minLength',
-    maxLength: 'maxLength',
-    minValue: 'minValue',
-    maxValue: 'maxValue',
-    regex: 'regex',
-    custom: 'custom',
+    minValue: (expected) => (value) => ({
+        result: value >= expected,
+        message: `Expected min value to be equal at least ${expected} but got '${value}'.`,
+    }),
+    maxValue: (expected) => (value) => ({
+        result: value <= expected,
+        message: `Expected max value to be equal ${expected} but got '${value}'.`,
+    }),
+    regex: (regex, flag) => (value) => {
+        let result;
+        try {
+            result = new Regex(regex, flag).test(value);
+        } catch {
+            result = false;
+        }
+        return {
+            valid: result || new Regex(regex, flag).test(value),
+            message: `Regex test failed for value '${value} - regex was: ${regex}, ${flag}'`,
+        }
+    },
+    custom: (custom) => (value) => {
+        try{
+            if(typeof custom !== 'function') {
+                constole.log(`Error at custom for '${value}' - custom have to be a function.`)
+                return;
+            }
+            custom(value);
+        } catch(error) {
+            console.log(`Error at custom for '${value}' - ${error}`);
+        }
+        return;
+    },
 };
 
 const base = {
